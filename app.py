@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 from tkcalendar import *
+import sqlite3
+from issues_repository import IssuesRepository
+import issue
 
 root = Tk()
 root.title('pyTrack Issue Tracker')
@@ -90,6 +93,7 @@ assignee = StringVar()
 version = IntVar()
 due_date = StringVar()
 
+
 cal = Calendar(root, selectmode="day", year=2021, month=1, day=12)
 
 
@@ -103,6 +107,23 @@ def clear_form():
 
 
 def add_issue():
+    i = issue.Issue
+    i.subject = subject_tb.get()
+    i.description = description_tb.get(1.0, END)
+    i.issue_type = issue_type.get()
+    i.priority = priority_type.get()
+    i.category = category_type.get()
+    i.status = status_type.get()
+    i.project = project.get()
+    i.assignee = assignee.get()
+    i.version = version.get()
+    i.time_estimate = time_tb.get()
+    i.due_date = '1/20/2021' #due_date
+    i.created_date = '1/15/2021'
+
+    conn = sqlite3.connect('pytrack.db')
+    ir = IssuesRepository(conn)
+    ir.create_issue(i)
     return
 
 
@@ -112,60 +133,53 @@ issue_type.set(issue_types[0])
 issue_type_dd = OptionMenu(tab2, issue_type, *issue_types)
 issue_type_dd.grid(column=0, row=1, padx=(10, 2), pady=(2, 5))
 issue_type_dd.config(width=12)
-issue_type.get()
 
 ttk.Label(tab2, text='Priority').grid(column=1, row=0, padx=2, pady=(5, 0))
 priority_type.set(priority_types[2])
 priority_type_dd = OptionMenu(tab2, priority_type, *priority_types)
 priority_type_dd.grid(column=1, row=1, padx=2, pady=(2, 5))
 priority_type_dd.config(width=12)
-priority_type.get()
 
 ttk.Label(tab2, text='Category').grid(column=2, row=0, padx=2, pady=(5, 0))
 category_type.set(category_types[0])
 category_type_dd = OptionMenu(tab2, category_type, *category_types)
 category_type_dd.grid(column=2, row=1, padx=2, pady=(2, 5))
 category_type_dd.config(width=9)
-category_type.get()
 
 ttk.Label(tab2, text='Status').grid(column=3, row=0, padx=2, pady=(5, 0))
 status_type.set(status_types[0])
 status_type_dd = OptionMenu(tab2, status_type, *status_types)
 status_type_dd.grid(column=3, row=1, padx=2, pady=(2, 5))
 status_type_dd.config(width=9)
-status_type.get()
 
 ttk.Label(tab2, text='Project').grid(column=4, row=0, padx=2, pady=(5, 0))
 project.set(projects[0])
 project_type_dd = OptionMenu(tab2, project, *projects)
 project_type_dd.grid(column=4, row=1, padx=2, pady=(2, 5))
 project_type_dd.config(width=9)
-project.get()
 
 ttk.Label(tab2, text='Assignee').grid(column=5, row=0, padx=2, pady=(5, 0))
 assignee.set(assignees[0])
 assignee_dd = OptionMenu(tab2, assignee, *assignees)
 assignee_dd.grid(column=5, row=1, padx=2, pady=(2, 5))
 assignee_dd.config(width=15)
-assignee.get()
 
 ttk.Label(tab2, text='Version').grid(column=6, row=0, padx=2, pady=(5, 0))
 version.set(versions[0])
 version_dd = OptionMenu(tab2, version, *versions)
 version_dd.grid(column=6, row=1, padx=2, pady=(2, 5))
 version_dd.config(width=5)
-version.get()
 
 calendar_btn = Button(tab2, text='Get Date', command=get_date)
 calendar_btn.grid(column=7, row=1, padx=2, pady=(2, 5))
 
 ttk.Label(tab2, text='Subject').place(x=15, y=80)
-subject_tb = Entry(tab2, width=157)
+subject_tb = Entry(tab2,  width=157)
 subject_tb.place(x=10, y=100)
 subject_tb.get()
 
 ttk.Label(tab2, text='Issue Description').place(x=15, y=120)
-description_tb = Text(tab2, width=157, height=20)
+description_tb = Text(tab2,  width=157, height=20)
 description_tb.place(x=10, y=140)
 description_tb.get(1.0, END)
 
@@ -173,9 +187,8 @@ button_frame = LabelFrame(tab2)
 button_frame.place(x=650, y=500)
 
 ttk.Label(button_frame, text='Time Estimate: ').grid(column=0, row=0)
-time_tb = Entry(button_frame, width=4)
+time_tb = Entry(button_frame,  width=4)
 time_tb.grid(column=1, row=0, padx=2)
-time_tb.get()
 
 clear_btn = Button(button_frame, text='Clear Form', command=clear_form)
 clear_btn.grid(column=2, row=0, padx=(15, 2))

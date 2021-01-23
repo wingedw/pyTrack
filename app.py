@@ -4,6 +4,7 @@ from tkcalendar import *
 import sqlite3
 from issues_repository import IssuesRepository
 import issue
+import datetime
 
 root = Tk()
 root.title('pyTrack Issue Tracker')
@@ -91,20 +92,25 @@ status_type = StringVar()
 project = StringVar()
 assignee = StringVar()
 version = IntVar()
-due_date = StringVar()
-
-
-cal = Calendar(root, selectmode="day", year=2021, month=1, day=12)
-
+#due_date = StringVar()
 
 # Methods
-def get_date():
-    due_date = '1/12/2021'
-
+def date():
+    date_entry.set(str(cal.get_date()))
 
 def clear_form():
-    return
-
+    issue_type.set(issue_types[0])
+    priority_type.set(priority_types[2])
+    category_type.set(category_types[0])
+    status_type.set(status_types[0])
+    project.set(projects[0])
+    assignee.set(assignees[0])
+    version.set(versions[0])
+    date_entry.set(str(datetime.date.today()))
+    cal.selection_set(datetime.date.today())
+    subject_tb.delete(0, END)
+    description_tb.delete(1.0, END)
+    time_tb.delete(0, END)
 
 def add_issue():
     i = issue.Issue
@@ -118,12 +124,12 @@ def add_issue():
     i.assignee = assignee.get()
     i.version = version.get()
     i.time_estimate = time_tb.get()
-    i.due_date = '1/20/2021' #due_date
-    i.created_date = '1/15/2021'
+    i.due_date = due_date_tb.get()
+    i.created_date = datetime.date.today()
 
     conn = sqlite3.connect('pytrack.db')
     ir = IssuesRepository(conn)
-    ir.create_issue(i)
+    error_message.config(text=ir.create_issue(i))
     return
 
 
@@ -170,24 +176,36 @@ version_dd = OptionMenu(tab2, version, *versions)
 version_dd.grid(column=6, row=1, padx=2, pady=(2, 5))
 version_dd.config(width=5)
 
-calendar_btn = Button(tab2, text='Get Date', command=get_date)
-calendar_btn.grid(column=7, row=1, padx=2, pady=(2, 5))
+ttk.Label(tab2, text='Due Date').grid(column=7, row=0, padx=2, pady=(5, 0))
+date_entry = StringVar()
+date_entry.set(str(datetime.date.today()))
+due_date_tb = Entry(tab2, text=date_entry, width=12)
+due_date_tb.grid(column=7, row=1, padx=2, pady=(5, 0))
+due_date_tb.get()
+
+cal = Calendar(tab2, selectmode="day", date_pattern='y-mm-dd')
+cal.place(x=700, y=85)
+select_btn = Button(tab2, text="Select Date", command=date)
+select_btn.place(x=785, y=280)
 
 ttk.Label(tab2, text='Subject').place(x=15, y=80)
-subject_tb = Entry(tab2,  width=157)
+subject_tb = Entry(tab2, width=112)
 subject_tb.place(x=10, y=100)
 subject_tb.get()
 
 ttk.Label(tab2, text='Issue Description').place(x=15, y=120)
-description_tb = Text(tab2,  width=157, height=20)
+description_tb = Text(tab2, width=84, height=20)
 description_tb.place(x=10, y=140)
 description_tb.get(1.0, END)
 
+error_message = ttk.Label(tab2, text='')
+error_message.place(x=10, y=500)
+
 button_frame = LabelFrame(tab2)
-button_frame.place(x=650, y=500)
+button_frame.place(x=690, y=500)
 
 ttk.Label(button_frame, text='Time Estimate: ').grid(column=0, row=0)
-time_tb = Entry(button_frame,  width=4)
+time_tb = Entry(button_frame, width=4)
 time_tb.grid(column=1, row=0, padx=2)
 
 clear_btn = Button(button_frame, text='Clear Form', command=clear_form)
@@ -237,8 +255,6 @@ ttk.Label(right_frame, text='Assignee: Dale Woodard').grid(column=4, row=2)
 ttk.Label(right_frame, text='Issue Description').place(x=15, y=80)
 details = Text(right_frame, width=67, height=20)
 details.place(x=5, y=100)
-
-
 
 # Tab 4 Project Settings an Issue
 

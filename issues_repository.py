@@ -22,7 +22,9 @@ class IssuesRepository(object):
             yield issue
 
     def create_issue(self, issue):
-        sql = "INSERT INTO Issues (\
+        _error = 'Issue successfully added.'
+        try:
+            sql = "INSERT INTO Issues (\
                 Subject, \
                 Description, \
                 Issue_Type, \
@@ -36,25 +38,27 @@ class IssuesRepository(object):
                 Due_Date, \
                 Created_date) \
                 VALUES ("\
-            + "'" + issue.subject  \
-            + "', '" + issue.description  \
-            + "', '" + issue.issue_type  \
-            + "', '" + issue.priority  \
-            + "', '" + issue.category  \
-            + "', '" + issue.status \
-            + "', '" + issue.project  \
-            + "', '" + issue.assignee \
-            + "', '" + str(issue.version) \
-            + "', '" + str(issue.time_estimate)  \
-            + "', '" + issue.due_date  \
-            + "', '" + issue.created_date + "')"
+                + "'" + issue.subject  \
+                + "', '" + issue.description  \
+                + "', '" + issue.issue_type  \
+                + "', '" + issue.priority  \
+                + "', '" + issue.category  \
+                + "', '" + issue.status \
+                + "', '" + issue.project  \
+                + "', '" + issue.assignee \
+                + "', '" + str(issue.version) \
+                + "', '" + str(issue.time_estimate)  \
+                + "', '" + str(issue.due_date)  \
+                + "', '" + str(issue.created_date) + "')"
 
-        with self.conn:
-            cursor = self.conn.cursor()
-            cursor.execute(sql)
-            issue.id = cursor.lastrowid
-            self.conn.commit()
-        return issue
+            with self.conn:
+                cursor = self.conn.cursor()
+                cursor.execute(sql)
+                issue.id = cursor.lastrowid
+                self.conn.commit()
+        except Exception as e:
+            _error = e
+        return _error
 
     def update_issue(self, issue):
         sql = """ UPDATE Issues

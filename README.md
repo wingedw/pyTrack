@@ -12,6 +12,7 @@ This a personal project that I am developing in my spare time
 to track my development work and projects around the house.
 It is free for you to use and if you have any comments
 or suggestions for changes or improvements drop me a line at dale@wingedw.com.
+
 ---
 ### Setup
 1. Clone the repository

@@ -25,8 +25,7 @@ tabControl.add(tab4, text='Project Settings')
 
 tabControl.pack(expand=1, fill="both")
 
-# Tab 1 Dashboard
-
+# <editor-fold desc="Tab 1 Dashboard">
 ttk.Label(tab1,
           text="Welcome to Your Dashboard").grid(column=0,
                                                  row=0,
@@ -35,8 +34,9 @@ ttk.Label(tab1,
 ttk.Label(tab1, text='Dashboard to implemented in Version 2').grid(column=0, row=1, padx=2, pady=(5, 0))
 quit_btn = Button(tab1, text="Exit pyTrack", command=root.quit)
 quit_btn.place(x=870, y=5)
+# </editor-fold>
 
-# Tab 2 Enter an Issue
+# <editor-fold desc="Tab 2 Enter an Issue">
 # Variables
 issue_types = [
     'Task',
@@ -92,11 +92,14 @@ status_type = StringVar()
 project = StringVar()
 assignee = StringVar()
 version = IntVar()
-#due_date = StringVar()
+
+
+# due_date = StringVar()
 
 # Methods
 def date():
     date_entry.set(str(cal.get_date()))
+
 
 def clear_form():
     issue_type.set(issue_types[0])
@@ -111,6 +114,8 @@ def clear_form():
     subject_tb.delete(0, END)
     description_tb.delete(1.0, END)
     time_tb.delete(0, END)
+    error_message.config(text='')
+
 
 def add_issue():
     i = issue.Issue
@@ -129,7 +134,10 @@ def add_issue():
 
     conn = sqlite3.connect('pytrack.db')
     ir = IssuesRepository(conn)
-    error_message.config(text=ir.create_issue(i))
+    _error = ir.create_issue(i)
+    if _error == 'Issue successfully added.':
+        clear_form()
+    error_message.config(text=_error)
     return
 
 
@@ -213,8 +221,9 @@ clear_btn.grid(column=2, row=0, padx=(15, 2))
 
 add_btn = Button(button_frame, text='Add Issue', command=add_issue)
 add_btn.grid(column=3, row=0, padx=2)
+#</editor-fold>
 
-# Tab 3 Issue Details an Issue
+# <editor-fold desc="Tab 3 Issue Details an Issue">
 left_frame = LabelFrame(tab3)
 left_frame.place(x=5, y=5, width=390, height=260)
 ttk.Label(left_frame, text='Search Conditions').grid(column=0, row=0)
@@ -255,11 +264,13 @@ ttk.Label(right_frame, text='Assignee: Dale Woodard').grid(column=4, row=2)
 ttk.Label(right_frame, text='Issue Description').place(x=15, y=80)
 details = Text(right_frame, width=67, height=20)
 details.place(x=5, y=100)
+# </editor-fold">
 
-# Tab 4 Project Settings an Issue
+# <editor-fold desc="Tab 4 Project Settings an Issue">
 
 ttk.Label(tab4, text="Welcome to Your Project Settings").grid(column=0, row=0, padx=30, pady=30)
 
 ttk.Label(tab4, text='Project Settings to implemented in Version 2 and 3').grid(column=0, row=1, padx=2, pady=(5, 0))
+# </editor-fold>
 
 root.mainloop()

@@ -12,14 +12,31 @@ class IssuesRepository(object):
         return values
 
     def get_issues(self):
+        sql = """SELECT *
+                 FROM issues"""
+        for row in self.conn.execute(sql):
+            issue = Issue(*row[1:])
+            issue.rowid = row[0]
+            yield issue
+
+    def get_issue_by_id(self, _id):
         sql = """SELECT Id, Subject, Description, Issue_Type, Priority,
         Category, Status, Project, Assignee, Version, Time_Estimate,
-        Due_Date, Created_Date"""
+        Due_Date, Created_Date FROM Issues WHERE Id = '""" + _id + "'"
 
         for row in self.conn.execute(sql):
             issue = Issue(*row[1:])
-            issue.id = row[0]
-            yield issue
+        #    issue.id = row[0]
+            return issue
+
+    def get_by_project(self, project):
+        sql = """SELECT Id, Subject, Description, Issue_Type, Priority,
+                Category, Status, Project, Assignee, Version, Time_Estimate,
+                Due_Date, Created_Date
+                FROM Issues WHERE Project = '""" + project + "'"
+        for row in self.conn.execute(sql):
+            issues = Issue(*row[1:])
+            yield issues
 
     def create_issue(self, issue):
         _error = 'Issue successfully added.'
@@ -67,7 +84,7 @@ class IssuesRepository(object):
         Time_Estimate = ?, Due_Date, Created_Date = ? WHERE Id= ?"""
 
         with self.conn:
-            self.conn.execute(sql, self.to_values(issue) + (issue.id,))
+            self.conn.execute(sql, self.to_values(issue) + issue.id)
         return issue
 
     def delete_issue(self, issue):

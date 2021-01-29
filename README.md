@@ -37,14 +37,16 @@ pytrack.db will be created in the root directory.
 * Version 3.0 - **Project Settings**
 * Version 2.0 - **Dashboard**
 * Version 1.0 - **Add, view and edit issues**
-   - [] 0.4 Refactor to MVC design pattern 
-   - [] 0.3 Edit issues
-   - [] 0.2 View issues
+   - [] 0.4 Edit issues
+   - [] 0.3 View issues
+   - [] 0.2 Refactor to MVC design pattern
    - [x] 0.1 Persist issue to database 
 
 ### Versions
-
-#### 0.11
+#### 0.1.9
+1. Refactored GUI into classes
+2. Started building controllers
+#### 0.1.0.1
 1. Add Issue Tab
    * Clear form if insert is successful
 #### 0.1

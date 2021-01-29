@@ -34,7 +34,7 @@ class Issue(object):
 
     @subject.setter
     def subject(self, value):
-        self._subject = utilities.required(value, 'Subject is required')
+        self._subject = value  # utilities.required(value, 'Subject is required')
 
     @property
     def description(self):
@@ -42,7 +42,7 @@ class Issue(object):
 
     @description.setter
     def description(self, value):
-        self._description = utilities.required(value, 'Description is required.')
+        self._description = value  # utilities.required(value, 'Description is required.')
 
     @property
     def issue_type(self):

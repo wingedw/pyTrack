@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, Button
 from tkcalendar import *
 import sqlite3
 from issues_repository import IssuesRepository
@@ -221,23 +221,43 @@ clear_btn.grid(column=2, row=0, padx=(15, 2))
 
 add_btn = Button(button_frame, text='Add Issue', command=add_issue)
 add_btn.grid(column=3, row=0, padx=2)
-#</editor-fold>
+
+
+# </editor-fold>
 
 # <editor-fold desc="Tab 3 Issue Details an Issue">
-left_frame = LabelFrame(tab3)
-left_frame.place(x=5, y=5, width=390, height=260)
-ttk.Label(left_frame, text='Search Conditions').grid(column=0, row=0)
+# Methods
 
-ttk.Label(left_frame, text='Project').grid(column=0, row=1, padx=2, pady=(5, 0))
+
+def subjects(_project):
+    conn = sqlite3.connect('pytrack.db')
+    ir = IssuesRepository(conn)
+    _issues = ir.get_by_project(_project)
+    return _issues
+
+
+def get_issue(id):
+    return
+
+
+# Upper Left Frame
+left_frame_upper = LabelFrame(tab3)
+left_frame_upper.place(x=5, y=5, width=390, height=260)
+ttk.Label(left_frame_upper, text='Search Conditions').grid(column=0, row=0)
+
+ttk.Label(left_frame_upper, text='Project').grid(column=0, row=1, padx=2, pady=(5, 0))
 project.set(projects[0])
-projects_dd = OptionMenu(left_frame, project, *projects)
+projects_dd = OptionMenu(left_frame_upper, project, *projects)
 projects_dd.grid(column=1, row=1, padx=2, pady=(2, 5))
 projects_dd.config(width=9)
-project.get()
 
+projects_btn = Button(left_frame_upper, text='Get Projects', command=subjects(project.get()))
+projects_btn.grid(column=0, row=2, padx=2)
+
+# Lower Left Frame
 left_frame_lower = LabelFrame(tab3)
 left_frame_lower.place(x=5, y=270, width=390, height=301)
-ttk.Label(left_frame_lower, text='Issues').grid(column=0, row=0)
+ttk.Label(left_frame_lower, text='Issues').place(x=10, y=0)
 
 issues_lb = Listbox(left_frame_lower)
 i = 0
@@ -245,8 +265,9 @@ while i < len(projects):
     issues_lb.insert(i, projects[i])
     i += 1
 
-issues_lb.grid(column=0, row=1)
+issues_lb.place(x=5, y=20)
 
+# Right Frame
 right_frame = LabelFrame(tab3)
 right_frame.place(x=400, y=5, width=566, height=566)
 ttk.Label(right_frame, text='Issue Details').grid(column=0, row=0)
